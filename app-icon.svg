@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="grad-pulse" x1="64" y1="64" x2="448" y2="448" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="50%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#6366f1"/>
+    </linearGradient>
+    <linearGradient id="tile-bg" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+  </defs>
+  <!-- Squircle Base Tile -->
+  <rect x="32" y="32" width="448" height="448" rx="112" fill="url(#tile-bg)" stroke="#38bdf8" stroke-opacity="0.2" stroke-width="8"/>
+  <!-- G + Pulse Telemetry Path -->
+  <path d="M 352 176 C 320 128 256 112 200 128 C 128 148 96 216 104 288 C 112 360 168 408 240 408 C 312 408 360 368 376 304 L 272 304 L 248 304 L 224 248 L 192 336 L 168 304 L 104 304" 
+        fill="none"
+        stroke="url(#grad-pulse)" 
+        stroke-width="30" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"/>
+</svg>

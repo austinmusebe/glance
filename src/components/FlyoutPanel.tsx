@@ -144,9 +144,20 @@ export function FlyoutPanel() {
 
             {/* Flyout bottom toolbar */}
             <div className="flex items-center justify-between pt-2.5 px-0.5 mt-auto">
-              <span className="text-[10px] text-muted tracking-tight">
-                Glance
-              </span>
+              <div className="flex items-center gap-1.5">
+                <svg viewBox="0 0 128 128" className="w-3.5 h-3.5" fill="none">
+                  <path
+                    d="M 88 44 C 80 32 64 28 50 32 C 32 37 24 54 26 72 C 28 90 42 102 60 102 C 78 102 90 92 94 76 L 68 76 L 62 76 L 56 62 L 48 84 L 42 76 L 26 76"
+                    stroke="var(--color-accent)"
+                    strokeWidth="14"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <span className="text-[10px] text-muted tracking-tight font-medium">
+                  Glance
+                </span>
+              </div>
               <button
                 onClick={() => setShowSettings(true)}
                 className="text-muted hover:text-card-foreground p-1 rounded transition-colors duration-150 hover:bg-[var(--color-item-hover)] active:scale-95 cursor-pointer"

@@ -21,6 +21,9 @@ pub fn create_tray<R: Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<()> {
         .show_menu_on_left_click(false)
         .on_menu_event(|app, event| match event.id.as_ref() {
             "quit" => {
+                if let Some(window) = app.get_webview_window("main") {
+                    let _ = window.destroy();
+                }
                 app.exit(0);
             }
             _ => {}

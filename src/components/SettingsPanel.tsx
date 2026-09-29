@@ -63,9 +63,20 @@ export function SettingsPanel({
   return (
     <div className="flex flex-col gap-2.5 p-3 h-full">
       <div className="flex items-center justify-between pb-1 border-b border-border">
-        <span className="text-xs font-semibold tracking-wider uppercase text-muted">
-          Settings
-        </span>
+        <div className="flex items-center gap-1.5">
+          <svg viewBox="0 0 128 128" className="w-3.5 h-3.5" fill="none">
+            <path
+              d="M 88 44 C 80 32 64 28 50 32 C 32 37 24 54 26 72 C 28 90 42 102 60 102 C 78 102 90 92 94 76 L 68 76 L 62 76 L 56 62 L 48 84 L 42 76 L 26 76"
+              stroke="var(--color-accent)"
+              strokeWidth="14"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          <span className="text-xs font-semibold tracking-wider uppercase text-muted">
+            Settings
+          </span>
+        </div>
         <button
           onClick={onClose}
           className="text-muted hover:text-card-foreground transition-colors text-base leading-none p-1 rounded hover:bg-[var(--color-item-hover)] active:scale-95 cursor-pointer"
