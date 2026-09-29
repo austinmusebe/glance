@@ -150,21 +150,21 @@ impl AppNetworkTracker {
                 *last_write = cur_write;
 
                 let entry = self.app_totals.entry(app_name.clone()).or_insert_with(|| {
-                    let icon = proc.exe().and_then(|p| self.icon_cache.get_icon_base64(p));
+                    let icon = self.icon_cache.get_icon(proc.exe(), &app_name);
                     (0, 0, icon)
                 });
 
                 entry.0 += delta_rx;
                 entry.1 += delta_tx;
                 if entry.2.is_none() {
-                    entry.2 = proc.exe().and_then(|p| self.icon_cache.get_icon_base64(p));
+                    entry.2 = self.icon_cache.get_icon(proc.exe(), &app_name);
                 }
             } else {
                 // First time Glance sees this process: initialize baseline so we only track
                 // bytes used *since* Glance launch!
                 self.last_proc_bytes.insert(pid, (cur_read, cur_write));
                 if !self.app_totals.contains_key(&app_name) {
-                    let icon = proc.exe().and_then(|p| self.icon_cache.get_icon_base64(p));
+                    let icon = self.icon_cache.get_icon(proc.exe(), &app_name);
                     self.app_totals.insert(app_name, (0, 0, icon));
                 }
             }

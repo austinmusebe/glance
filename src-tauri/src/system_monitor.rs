@@ -62,7 +62,8 @@ impl SystemMonitor {
                         sysinfo::ProcessRefreshKind::nothing()
                             .with_memory()
                             .with_cpu()
-                            .with_disk_usage(),
+                            .with_disk_usage()
+                            .with_exe(sysinfo::UpdateKind::OnlyIfNotSet),
                     );
 
                     let num_cpus = sys.cpus().len().max(1) as f32;
@@ -73,7 +74,7 @@ impl SystemMonitor {
                         .iter()
                         .map(|(pid, proc)| {
                             let cpu_norm = (proc.cpu_usage() / num_cpus).min(100.0);
-                            let icon = proc.exe().and_then(|p| icon_cache.get_icon_base64(p));
+                            let icon = icon_cache.get_icon(proc.exe(), &proc.name().to_string_lossy());
                             ProcessItem {
                                 pid: pid.as_u32(),
                                 name: proc.name().to_string_lossy().to_string(),

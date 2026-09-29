@@ -2,6 +2,7 @@ import type { CpuStats } from "../../lib/types";
 import { formatPercent } from "../../lib/format";
 import { Sparkline } from "../Sparkline";
 import { ProgressBar } from "../ProgressBar";
+import { ProcessIcon } from "../ProcessIcon";
 
 interface CpuDetailProps {
   cpu: CpuStats;
@@ -79,17 +80,7 @@ export function CpuDetail({ cpu, history }: CpuDetailProps) {
                   <span className="text-[10px] tabular-nums text-muted w-3 text-right">
                     {idx + 1}
                   </span>
-                  {proc.icon ? (
-                    <img
-                      src={proc.icon}
-                      alt=""
-                      className="w-3.5 h-3.5 shrink-0 rounded-[2px] object-contain"
-                    />
-                  ) : (
-                    <div className="w-3.5 h-3.5 shrink-0 rounded-[2px] bg-white/10 flex items-center justify-center text-[9px] text-muted">
-                      ⚙
-                    </div>
-                  )}
+                  <ProcessIcon icon={proc.icon} name={proc.name} />
                   <span
                     className="font-medium text-card-foreground truncate max-w-[170px]"
                     title={`${proc.name} (PID: ${proc.pid})`}

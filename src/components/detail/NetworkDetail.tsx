@@ -3,6 +3,7 @@ import type { NetworkStats } from "../../lib/types";
 import { formatBytes, formatThroughput } from "../../lib/format";
 import { Sparkline } from "../Sparkline";
 import { usePublicIp } from "../../hooks/usePublicIp";
+import { ProcessIcon } from "../ProcessIcon";
 
 interface NetworkDetailProps {
   network: NetworkStats;
@@ -160,17 +161,7 @@ export function NetworkDetail({ network, downHistory, upHistory }: NetworkDetail
                   <span className="text-[10px] tabular-nums text-muted w-3 text-right">
                     {idx + 1}
                   </span>
-                  {app.icon ? (
-                    <img
-                      src={app.icon}
-                      alt=""
-                      className="w-3.5 h-3.5 shrink-0 rounded-[2px] object-contain"
-                    />
-                  ) : (
-                    <div className="w-3.5 h-3.5 shrink-0 rounded-[2px] bg-white/10 flex items-center justify-center text-[9px] text-muted">
-                      ⚙
-                    </div>
-                  )}
+                  <ProcessIcon icon={app.icon} name={app.name} />
                   <span
                     className="font-medium text-card-foreground truncate max-w-[130px]"
                     title={app.name}
