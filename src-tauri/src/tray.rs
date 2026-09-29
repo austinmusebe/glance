@@ -1,4 +1,5 @@
 use tauri::{
+    image::Image,
     menu::{Menu, MenuItem},
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
     Manager, Runtime,
@@ -9,10 +10,10 @@ pub fn create_tray<R: Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<()> {
     let quit_i = MenuItem::with_id(app, "quit", "Quit Glance", true, None::<&str>)?;
     let menu = Menu::with_items(app, &[&quit_i])?;
 
-    let icon = app
-        .default_window_icon()
-        .cloned()
-        .expect("default window icon must be set in tauri.conf.json");
+    let icon = Image::from_bytes(include_bytes!("../icons/32x32.png"))
+        .ok()
+        .or_else(|| app.default_window_icon().cloned())
+        .expect("tray icon must be set in tauri.conf.json or embedded");
 
     TrayIconBuilder::with_id("main")
         .icon(icon)
