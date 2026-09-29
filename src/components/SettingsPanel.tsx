@@ -142,9 +142,8 @@ export function SettingsPanel({
               <button
                 key={p.hex}
                 onClick={() => handleHexChange(p.hex)}
-                className={`w-4.5 h-4.5 rounded-full transition-transform cursor-pointer relative flex items-center justify-center ${
-                  isSelected ? "scale-115 ring-2 ring-[var(--color-card-foreground)] ring-offset-1 ring-offset-card" : "hover:scale-110"
-                }`}
+                className={`w-4.5 h-4.5 rounded-full transition-transform cursor-pointer relative flex items-center justify-center ${isSelected ? "scale-115 ring-2 ring-[var(--color-card-foreground)] ring-offset-1 ring-offset-card" : "hover:scale-110"
+                  }`}
                 style={{ backgroundColor: p.hex }}
                 title={p.name}
                 aria-label={`Select ${p.name}`}
@@ -187,16 +186,14 @@ export function SettingsPanel({
       <SettingRow label="Launch on Startup">
         <button
           onClick={() => updateSettings({ launch_on_startup: !settings.launch_on_startup })}
-          className={`w-9 h-5 rounded-full transition-colors relative cursor-pointer ${
-            settings.launch_on_startup ? "bg-[var(--color-accent)]" : "bg-[var(--color-item-hover)] border border-border"
-          }`}
+          className={`w-9 h-5 rounded-full transition-colors relative cursor-pointer ${settings.launch_on_startup ? "bg-[var(--color-accent)]" : "bg-[var(--color-item-hover)] border border-border"
+            }`}
           role="switch"
           aria-checked={settings.launch_on_startup}
         >
           <span
-            className={`block w-3.5 h-3.5 rounded-full bg-white absolute top-0.75 transition-transform ${
-              settings.launch_on_startup ? "translate-x-4.5" : "translate-x-0.75"
-            }`}
+            className={`block w-3.5 h-3.5 rounded-full bg-white absolute top-0.75 transition-transform ${settings.launch_on_startup ? "translate-x-4.5" : "translate-x-0.75"
+              }`}
           />
         </button>
       </SettingRow>
