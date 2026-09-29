@@ -1,6 +1,8 @@
 mod battery;
 mod gpu_monitor;
+mod icon_cache;
 mod models;
+mod network_tracker;
 mod settings;
 mod system_monitor;
 mod tray;

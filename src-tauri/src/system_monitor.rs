@@ -40,6 +40,9 @@ impl SystemMonitor {
         let gpu_monitor = self.gpu_monitor.clone();
 
         std::thread::spawn(move || {
+            let icon_cache = crate::icon_cache::IconCache::new();
+            let mut network_tracker = crate::network_tracker::AppNetworkTracker::new(icon_cache.clone());
+
             // Track previous network bytes for delta calculation
             let mut prev_rx: u64 = 0;
             let mut prev_tx: u64 = 0;
@@ -48,37 +51,61 @@ impl SystemMonitor {
             loop {
                 std::thread::sleep(Duration::from_millis(interval_ms));
 
-                // --- CPU + RAM ---
-                let (cpu_usage, used_mem, total_mem, core_percentages, top_processes) = {
+                // --- CPU + RAM + Processes + Network Tracker ---
+                let (cpu_usage, used_mem, total_mem, core_percentages, top_ram_processes, top_cpu_processes, app_network) = {
                     let mut sys = system.lock().unwrap();
                     sys.refresh_cpu_all();
                     sys.refresh_memory();
                     sys.refresh_processes_specifics(
                         sysinfo::ProcessesToUpdate::All,
                         true,
-                        sysinfo::ProcessRefreshKind::nothing().with_memory(),
+                        sysinfo::ProcessRefreshKind::nothing()
+                            .with_memory()
+                            .with_cpu()
+                            .with_disk_usage(),
                     );
 
+                    let num_cpus = sys.cpus().len().max(1) as f32;
                     let cores: Vec<f32> = sys.cpus().iter().map(|c| c.cpu_usage()).collect();
 
-                    let mut procs: Vec<ProcessItem> = sys
+                    let all_procs: Vec<ProcessItem> = sys
                         .processes()
                         .iter()
-                        .map(|(pid, proc)| ProcessItem {
-                            pid: pid.as_u32(),
-                            name: proc.name().to_string_lossy().to_string(),
-                            memory_bytes: proc.memory(),
+                        .map(|(pid, proc)| {
+                            let cpu_norm = (proc.cpu_usage() / num_cpus).min(100.0);
+                            let icon = proc.exe().and_then(|p| icon_cache.get_icon_base64(p));
+                            ProcessItem {
+                                pid: pid.as_u32(),
+                                name: proc.name().to_string_lossy().to_string(),
+                                memory_bytes: proc.memory(),
+                                cpu_percent: cpu_norm,
+                                icon,
+                            }
                         })
                         .collect();
-                    procs.sort_by(|a, b| b.memory_bytes.cmp(&a.memory_bytes));
-                    procs.truncate(5);
+
+                    let mut top_ram = all_procs.clone();
+                    top_ram.sort_by(|a, b| b.memory_bytes.cmp(&a.memory_bytes));
+                    top_ram.truncate(5);
+
+                    let mut top_cpu = all_procs;
+                    top_cpu.sort_by(|a, b| {
+                        b.cpu_percent
+                            .partial_cmp(&a.cpu_percent)
+                            .unwrap_or(std::cmp::Ordering::Equal)
+                    });
+                    top_cpu.truncate(5);
+
+                    let app_net = network_tracker.update(&sys);
 
                     (
                         sys.global_cpu_usage(),
                         sys.used_memory(),
                         sys.total_memory(),
                         cores,
-                        procs,
+                        top_ram,
+                        top_cpu,
+                        app_net,
                     )
                 };
 
@@ -141,6 +168,7 @@ impl SystemMonitor {
                     cpu: CpuStats {
                         usage_percent: cpu_usage,
                         core_percentages,
+                        top_processes: top_cpu_processes,
                     },
                     gpu: gpu_data,
                     ram: RamStats {
@@ -151,7 +179,7 @@ impl SystemMonitor {
                         } else {
                             0.0
                         },
-                        top_processes,
+                        top_processes: top_ram_processes,
                     },
                     network: NetworkStats {
                         rx_bytes_per_sec: rx_per_sec,
@@ -159,6 +187,7 @@ impl SystemMonitor {
                         local_ip,
                         wifi_ssid,
                         public_ip: None,
+                        app_network,
                     },
                     battery: battery_data,
                 };

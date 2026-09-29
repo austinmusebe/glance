@@ -10,6 +10,7 @@ interface CpuDetailProps {
 
 export function CpuDetail({ cpu, history }: CpuDetailProps) {
   const cores = cpu.core_percentages || [];
+  const topProcesses = cpu.top_processes || [];
 
   return (
     <div className="flex flex-col gap-3">
@@ -52,6 +53,53 @@ export function CpuDetail({ cpu, history }: CpuDetailProps) {
                   </span>
                 </div>
                 <ProgressBar value={usage} className="!h-1" />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Top 5 Processes by CPU */}
+      {topProcesses.length > 0 && (
+        <div className="flex flex-col gap-1.5">
+          <div className="flex items-center justify-between px-0.5">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-muted">
+              Top Processes (CPU)
+            </span>
+            <span className="text-[10px] text-muted">Load</span>
+          </div>
+
+          <div className="flex flex-col gap-1 rounded-[var(--radius-card)] bg-card p-2 border border-border">
+            {topProcesses.map((proc, idx) => (
+              <div
+                key={`${proc.pid}-${idx}`}
+                className="flex items-center justify-between py-1 px-1.5 rounded hover:bg-white/5 transition-colors text-xs"
+              >
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="text-[10px] tabular-nums text-muted w-3 text-right">
+                    {idx + 1}
+                  </span>
+                  {proc.icon ? (
+                    <img
+                      src={proc.icon}
+                      alt=""
+                      className="w-3.5 h-3.5 shrink-0 rounded-[2px] object-contain"
+                    />
+                  ) : (
+                    <div className="w-3.5 h-3.5 shrink-0 rounded-[2px] bg-white/10 flex items-center justify-center text-[9px] text-muted">
+                      ⚙
+                    </div>
+                  )}
+                  <span
+                    className="font-medium text-card-foreground truncate max-w-[170px]"
+                    title={`${proc.name} (PID: ${proc.pid})`}
+                  >
+                    {proc.name}
+                  </span>
+                </div>
+                <span className="tabular-nums font-semibold text-card-foreground shrink-0 text-xs">
+                  {proc.cpu_percent !== undefined ? `${proc.cpu_percent.toFixed(1)}%` : "0%"}
+                </span>
               </div>
             ))}
           </div>

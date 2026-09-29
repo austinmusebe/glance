@@ -14,6 +14,7 @@ pub struct SystemStats {
 pub struct CpuStats {
     pub usage_percent: f32,
     pub core_percentages: Vec<f32>,
+    pub top_processes: Vec<ProcessItem>,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -36,6 +37,8 @@ pub struct ProcessItem {
     pub pid: u32,
     pub name: String,
     pub memory_bytes: u64,
+    pub cpu_percent: f32,
+    pub icon: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -45,6 +48,16 @@ pub struct NetworkStats {
     pub local_ip: Option<String>,
     pub wifi_ssid: Option<String>,
     pub public_ip: Option<String>,
+    pub app_network: Vec<AppNetworkUsage>,
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct AppNetworkUsage {
+    pub name: String,
+    pub icon: Option<String>,
+    pub rx_bytes: u64,
+    pub tx_bytes: u64,
+    pub total_bytes: u64,
 }
 
 #[derive(Debug, Clone, Serialize)]

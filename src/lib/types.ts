@@ -19,6 +19,7 @@ export interface BatteryStats {
 export interface CpuStats {
   usage_percent: number;
   core_percentages?: number[];
+  top_processes?: ProcessItem[];
 }
 
 export interface GpuAdapter {
@@ -38,6 +39,16 @@ export interface ProcessItem {
   pid: number;
   name: string;
   memory_bytes: number;
+  cpu_percent?: number;
+  icon?: string | null;
+}
+
+export interface AppNetworkUsage {
+  name: string;
+  icon?: string | null;
+  rx_bytes: number;
+  tx_bytes: number;
+  total_bytes: number;
 }
 
 export interface NetworkStats {
@@ -46,6 +57,7 @@ export interface NetworkStats {
   local_ip?: string | null;
   wifi_ssid?: string | null;
   public_ip?: string | null;
+  app_network?: AppNetworkUsage[];
 }
 
 export interface UserSettings {
