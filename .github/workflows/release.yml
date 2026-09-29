@@ -1,0 +1,85 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version string (e.g. 0.1.0 or 1.0.0)'
+        required: true
+        default: '0.1.0'
+      prerelease:
+        description: 'Publish as a pre-release'
+        required: false
+        type: boolean
+        default: false
+      draft:
+        description: 'Create as draft release'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build & Release Windows App
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - name: Rust Cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Set Release Version
+        shell: pwsh
+        run: |
+          $ver = "${{ github.event.inputs.version }}".TrimStart("v")
+          Write-Host "Updating version to $ver"
+
+          # Update package.json
+          $pkg = Get-Content ./package.json -Raw | ConvertFrom-Json
+          $pkg.version = $ver
+          $pkg | ConvertTo-Json -Depth 10 | Set-Content ./package.json
+
+          # Update tauri.conf.json
+          $tauri = Get-Content ./src-tauri/tauri.conf.json -Raw | ConvertFrom-Json
+          $tauri.version = $ver
+          $tauri | ConvertTo-Json -Depth 10 | Set-Content ./src-tauri/tauri.conf.json
+
+          # Update Cargo.toml version
+          (Get-Content ./src-tauri/Cargo.toml) -replace '^version = ".*"', "version = `"$ver`"" | Set-Content ./src-tauri/Cargo.toml
+
+      - name: Build Tauri Application & Release
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: v__VERSION__
+          releaseName: Glance v__VERSION__
+          releaseBody: |
+            ## Glance v__VERSION__
+            Mac-like menu-bar system monitor for Windows.
+
+            ### Assets
+            Installers and standalone binaries are attached below.
+          releaseDraft: ${{ github.event.inputs.draft }}
+          prerelease: ${{ github.event.inputs.prerelease }}
