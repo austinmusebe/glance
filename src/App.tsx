@@ -39,7 +39,7 @@ function App() {
   // Apply custom accent color to CSS variables
   useEffect(() => {
     const root = document.documentElement;
-    const hex = (settings.accent_color || "#3b82f6").trim();
+    const hex = (settings.accent_color || "#60a5fa").trim();
     const cleanHex = hex.startsWith("#") ? hex.slice(1) : hex;
 
     if (/^[0-9a-fA-F]{6}$/.test(cleanHex)) {
@@ -52,7 +52,7 @@ function App() {
   }, [settings.accent_color]);
 
   return (
-    <div className="h-screen w-screen overflow-hidden bg-[var(--color-bg)] text-card-foreground backdrop-blur-xl transition-colors duration-200">
+    <div className="h-screen w-screen overflow-hidden">
       <FlyoutPanel />
     </div>
   );

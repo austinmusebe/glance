@@ -10,7 +10,7 @@ interface SettingsPanelProps {
 }
 
 const ACCENT_PRESETS = [
-  { name: "Blue", hex: "#3b82f6" },
+  { name: "Blue", hex: "#60a5fa" },
   { name: "Indigo", hex: "#6366f1" },
   { name: "Purple", hex: "#8b5cf6" },
   { name: "Pink", hex: "#ec4899" },
@@ -29,14 +29,14 @@ export function SettingsPanel({
   const settings = propSettings ?? hookResult.settings;
   const updateSettings = propUpdateSettings ?? hookResult.updateSettings;
   const [localInterval, setLocalInterval] = useState(settings.refresh_interval_ms);
-  const [hexInput, setHexInput] = useState(settings.accent_color || "#3b82f6");
+  const [hexInput, setHexInput] = useState(settings.accent_color || "#60a5fa");
 
   useEffect(() => {
     setLocalInterval(settings.refresh_interval_ms);
   }, [settings.refresh_interval_ms]);
 
   useEffect(() => {
-    setHexInput(settings.accent_color || "#3b82f6");
+    setHexInput(settings.accent_color || "#60a5fa");
   }, [settings.accent_color]);
 
   const handleIntervalChange = (value: number) => {

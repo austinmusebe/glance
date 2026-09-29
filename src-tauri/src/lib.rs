@@ -33,8 +33,18 @@ pub fn run() {
                 )?;
             }
 
-            // Hide window on blur (click outside)
+            // Apply Mica effect (Windows 11) or Acrylic fallback
             if let Some(window) = app.get_webview_window("main") {
+                #[cfg(target_os = "windows")]
+                {
+                    use window_vibrancy::{apply_mica, apply_acrylic};
+                    // Try Mica first (Win 11, adaptive theme), fall back to Acrylic (Win 10)
+                    if apply_mica(&window, None).is_err() {
+                        let _ = apply_acrylic(&window, Some((18, 18, 18, 200)));
+                    }
+                }
+
+                // Hide window on blur (click outside)
                 let window_clone = window.clone();
                 window.on_window_event(move |event| {
                     if let tauri::WindowEvent::Focused(false) = event {
@@ -46,9 +56,8 @@ pub fn run() {
             // Set up tray icon
             tray::create_tray(app.handle())?;
 
-            // Load settings for refresh interval and initial theme
+            // Load settings for refresh interval
             let settings = settings::get_settings(app.handle().clone());
-            settings::apply_theme_to_window(app.handle(), &settings.theme);
 
             // Start system monitoring
             let monitor = SystemMonitor::new();

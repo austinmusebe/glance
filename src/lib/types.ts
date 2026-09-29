@@ -73,5 +73,5 @@ export const DEFAULT_SETTINGS: UserSettings = {
   theme: "system",
   launch_on_startup: false,
   layout: "grid",
-  accent_color: "#3b82f6",
+  accent_color: "#60a5fa",
 };
