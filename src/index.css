@@ -9,7 +9,8 @@ body,
   padding: 0;
   overflow: hidden;
   font-family:
-    "Segoe UI Variable",
+    "Segoe UI Variable Display",
+    "Segoe UI Variable Text",
     "Segoe UI",
     system-ui,
     -apple-system,
@@ -18,12 +19,39 @@ body,
   user-select: none;
 }
 
-/* Custom theme tokens */
+/* Custom theme tokens for dark (default) */
+:root {
+  --color-card: rgba(30, 30, 30, 0.65);
+  --color-card-hover: rgba(40, 40, 40, 0.75);
+  --color-card-foreground: rgba(255, 255, 255, 0.95);
+  --color-muted: rgba(255, 255, 255, 0.55);
+  --color-accent: rgb(96, 165, 250);
+  --color-accent-dim: rgba(96, 165, 250, 0.2);
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-hover: rgba(255, 255, 255, 0.15);
+  --radius-card: 10px;
+}
+
+/* Light mode tokens */
+:root.light {
+  --color-card: rgba(255, 255, 255, 0.68);
+  --color-card-hover: rgba(255, 255, 255, 0.82);
+  --color-card-foreground: rgba(20, 20, 20, 0.95);
+  --color-muted: rgba(0, 0, 0, 0.55);
+  --color-accent: rgb(37, 99, 235);
+  --color-accent-dim: rgba(37, 99, 235, 0.15);
+  --color-border: rgba(0, 0, 0, 0.08);
+  --color-border-hover: rgba(0, 0, 0, 0.16);
+}
+
 @theme {
-  --color-card: oklch(0.2 0 0 / 0.6);
-  --color-card-foreground: oklch(0.95 0 0);
-  --color-muted: oklch(0.6 0 0);
-  --color-accent: oklch(0.65 0.15 250);
-  --color-border: oklch(0.4 0 0 / 0.3);
-  --radius-card: 12px;
+  --color-card: var(--color-card);
+  --color-card-hover: var(--color-card-hover);
+  --color-card-foreground: var(--color-card-foreground);
+  --color-muted: var(--color-muted);
+  --color-accent: var(--color-accent);
+  --color-accent-dim: var(--color-accent-dim);
+  --color-border: var(--color-border);
+  --color-border-hover: var(--color-border-hover);
+  --radius-card: var(--radius-card);
 }

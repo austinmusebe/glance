@@ -1,5 +1,6 @@
 mod gpu_monitor;
 mod models;
+mod settings;
 mod system_monitor;
 mod tray;
 
@@ -15,6 +16,10 @@ pub fn run() {
             tauri_plugin_autostart::MacosLauncher::LaunchAgent,
             Some(vec![]),
         ))
+        .invoke_handler(tauri::generate_handler![
+            settings::get_settings,
+            settings::set_settings
+        ])
         .setup(|app| {
             // Logging in debug mode
             if cfg!(debug_assertions) {
@@ -48,9 +53,12 @@ pub fn run() {
             // Set up tray icon
             tray::create_tray(app.handle())?;
 
+            // Load settings for refresh interval
+            let settings = settings::get_settings(app.handle().clone());
+
             // Start system monitoring
             let monitor = SystemMonitor::new();
-            monitor.start_polling(app.handle().clone(), 1000);
+            monitor.start_polling(app.handle().clone(), settings.refresh_interval_ms);
 
             Ok(())
         })
