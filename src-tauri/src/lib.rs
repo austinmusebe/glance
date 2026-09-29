@@ -1,3 +1,4 @@
+mod gpu_monitor;
 mod models;
 mod system_monitor;
 mod tray;
