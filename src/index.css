@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+/* Transparent background for Mica/Acrylic effect */
+html,
+body,
+#root {
+  background: transparent;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family:
+    "Segoe UI Variable",
+    "Segoe UI",
+    system-ui,
+    -apple-system,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+
+/* Custom theme tokens */
+@theme {
+  --color-card: oklch(0.2 0 0 / 0.6);
+  --color-card-foreground: oklch(0.95 0 0);
+  --color-muted: oklch(0.6 0 0);
+  --color-accent: oklch(0.65 0.15 250);
+  --color-border: oklch(0.4 0 0 / 0.3);
+  --radius-card: 12px;
+}
