@@ -49,14 +49,36 @@ impl SystemMonitor {
                 std::thread::sleep(Duration::from_millis(interval_ms));
 
                 // --- CPU + RAM ---
-                let (cpu_usage, used_mem, total_mem) = {
+                let (cpu_usage, used_mem, total_mem, core_percentages, top_processes) = {
                     let mut sys = system.lock().unwrap();
                     sys.refresh_cpu_all();
                     sys.refresh_memory();
+                    sys.refresh_processes_specifics(
+                        sysinfo::ProcessesToUpdate::All,
+                        true,
+                        sysinfo::ProcessRefreshKind::nothing().with_memory(),
+                    );
+
+                    let cores: Vec<f32> = sys.cpus().iter().map(|c| c.cpu_usage()).collect();
+
+                    let mut procs: Vec<ProcessItem> = sys
+                        .processes()
+                        .iter()
+                        .map(|(pid, proc)| ProcessItem {
+                            pid: pid.as_u32(),
+                            name: proc.name().to_string_lossy().to_string(),
+                            memory_bytes: proc.memory(),
+                        })
+                        .collect();
+                    procs.sort_by(|a, b| b.memory_bytes.cmp(&a.memory_bytes));
+                    procs.truncate(5);
+
                     (
                         sys.global_cpu_usage(),
                         sys.used_memory(),
                         sys.total_memory(),
+                        cores,
+                        procs,
                     )
                 };
 
@@ -100,11 +122,6 @@ impl SystemMonitor {
 
                 let battery_data = crate::battery::get_battery_stats();
 
-                let core_percentages: Vec<f32> = {
-                    let sys = system.lock().unwrap();
-                    sys.cpus().iter().map(|c| c.cpu_usage()).collect()
-                };
-
                 let stats = SystemStats {
                     timestamp: std::time::SystemTime::now()
                         .duration_since(std::time::UNIX_EPOCH)
@@ -123,7 +140,7 @@ impl SystemMonitor {
                         } else {
                             0.0
                         },
-                        top_processes: vec![],
+                        top_processes,
                     },
                     network: NetworkStats {
                         rx_bytes_per_sec: rx_per_sec,

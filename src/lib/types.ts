@@ -31,6 +31,13 @@ export interface RamStats {
   used_bytes: number;
   total_bytes: number;
   usage_percent: number;
+  top_processes?: ProcessItem[];
+}
+
+export interface ProcessItem {
+  pid: number;
+  name: string;
+  memory_bytes: number;
 }
 
 export interface NetworkStats {

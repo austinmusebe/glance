@@ -2,11 +2,13 @@ import type { MetricType, SystemStats } from "../../lib/types";
 import { formatDuration } from "../../lib/format";
 import { CpuDetail } from "./CpuDetail";
 import { GpuDetail } from "./GpuDetail";
+import { RamDetail } from "./RamDetail";
 
 interface DetailViewProps {
   metric: MetricType;
   stats: SystemStats;
   cpuHistory: number[];
+  ramHistory?: number[];
   gpuHistory?: Record<string, number[]>;
   onBack: () => void;
 }
@@ -19,7 +21,14 @@ const METRIC_TITLES: Record<MetricType, string> = {
   battery: "Battery",
 };
 
-export function DetailView({ metric, stats, cpuHistory, gpuHistory = {}, onBack }: DetailViewProps) {
+export function DetailView({
+  metric,
+  stats,
+  cpuHistory,
+  ramHistory = [],
+  gpuHistory = {},
+  onBack,
+}: DetailViewProps) {
   const title = METRIC_TITLES[metric];
 
   return (
@@ -61,14 +70,7 @@ export function DetailView({ metric, stats, cpuHistory, gpuHistory = {}, onBack 
         )}
 
         {metric === "ram" && (
-          <div className="flex flex-col gap-2">
-            <div className="flex items-baseline justify-between">
-              <span className="text-xs text-muted">Memory Usage</span>
-              <span className="text-xl font-bold tabular-nums text-card-foreground">
-                {Math.round(stats.ram.usage_percent)}%
-              </span>
-            </div>
-          </div>
+          <RamDetail ram={stats.ram} history={ramHistory} />
         )}
 
         {metric === "network" && (
