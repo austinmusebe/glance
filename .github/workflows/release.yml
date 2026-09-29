@@ -77,7 +77,7 @@ jobs:
           releaseName: Glance v__VERSION__
           releaseBody: |
             ## Glance v__VERSION__
-            Mac-like menu-bar system monitor for Windows.
+            System monitor for Windows.
 
             ### Assets
             Installers and standalone binaries are attached below.
