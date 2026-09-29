@@ -1,6 +1,6 @@
 import type { MetricType, SystemStats } from "../../lib/types";
 import { formatDuration } from "../../lib/format";
-import { Sparkline } from "../Sparkline";
+import { CpuDetail } from "./CpuDetail";
 
 interface DetailViewProps {
   metric: MetricType;
@@ -51,17 +51,7 @@ export function DetailView({ metric, stats, cpuHistory, onBack }: DetailViewProp
       {/* Metric Detail Content */}
       <div className="flex-1 py-3 overflow-y-auto flex flex-col gap-3">
         {metric === "cpu" && (
-          <div className="flex flex-col gap-2">
-            <div className="flex items-baseline justify-between">
-              <span className="text-xs text-muted">CPU Utilization</span>
-              <span className="text-xl font-bold tabular-nums text-card-foreground">
-                {Math.round(stats.cpu.usage_percent)}%
-              </span>
-            </div>
-            <div className="rounded-[var(--radius-card)] bg-card p-2.5 border border-border">
-              <Sparkline data={cpuHistory} width={340} height={70} />
-            </div>
-          </div>
+          <CpuDetail cpu={stats.cpu} history={cpuHistory} />
         )}
 
         {metric === "gpu" && (

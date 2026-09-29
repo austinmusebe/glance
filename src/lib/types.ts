@@ -18,6 +18,7 @@ export interface BatteryStats {
 
 export interface CpuStats {
   usage_percent: number;
+  core_percentages?: number[];
 }
 
 export interface GpuAdapter {
