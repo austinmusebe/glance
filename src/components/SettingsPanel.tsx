@@ -5,10 +5,18 @@ import type { UserSettings } from "../lib/types";
 
 interface SettingsPanelProps {
   onClose: () => void;
+  settings?: UserSettings;
+  updateSettings?: (partial: Partial<UserSettings>) => Promise<void>;
 }
 
-export function SettingsPanel({ onClose }: SettingsPanelProps) {
-  const { settings, updateSettings } = useSettings();
+export function SettingsPanel({
+  onClose,
+  settings: propSettings,
+  updateSettings: propUpdateSettings,
+}: SettingsPanelProps) {
+  const hookResult = useSettings();
+  const settings = propSettings ?? hookResult.settings;
+  const updateSettings = propUpdateSettings ?? hookResult.updateSettings;
   const [localInterval, setLocalInterval] = useState(settings.refresh_interval_ms);
 
   useEffect(() => {

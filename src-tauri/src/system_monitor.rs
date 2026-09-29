@@ -123,6 +123,13 @@ impl SystemMonitor {
                 };
 
                 let _ = app_handle.emit("system-stats", &stats);
+
+                if let Some(tray) = app_handle.tray_by_id("main") {
+                    let _ = tray.set_tooltip(Some(format!(
+                        "Glance — CPU: {:.0}% | RAM: {:.0}%",
+                        stats.cpu.usage_percent, stats.ram.usage_percent
+                    )));
+                }
             }
         });
     }

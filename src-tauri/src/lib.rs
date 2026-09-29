@@ -35,8 +35,8 @@ pub fn run() {
                 #[cfg(target_os = "windows")]
                 {
                     use window_vibrancy::{apply_mica, apply_acrylic};
-                    // Try Mica first (Win 11), fall back to Acrylic (Win 10)
-                    if apply_mica(&window, Some(true)).is_err() {
+                    // Try Mica first (Win 11, adaptive theme), fall back to Acrylic (Win 10)
+                    if apply_mica(&window, None).is_err() {
                         let _ = apply_acrylic(&window, Some((18, 18, 18, 200)));
                     }
                 }
