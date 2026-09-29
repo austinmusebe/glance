@@ -14,7 +14,7 @@ import { SettingsPanel } from "./SettingsPanel";
 import { DetailView } from "./detail/DetailView";
 
 export function FlyoutPanel() {
-  const { stats, cpuHistory } = useSystemStats();
+  const { stats, cpuHistory, gpuHistory } = useSystemStats();
   const { settings, updateSettings } = useSettings();
   const [showSettings, setShowSettings] = useState(false);
   const [selectedMetric, setSelectedMetric] = useState<MetricType | null>(null);
@@ -82,6 +82,7 @@ export function FlyoutPanel() {
               metric={selectedMetric}
               stats={stats}
               cpuHistory={cpuHistory}
+              gpuHistory={gpuHistory}
               onBack={() => setSelectedMetric(null)}
             />
           </motion.div>

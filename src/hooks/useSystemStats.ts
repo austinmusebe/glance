@@ -5,11 +5,12 @@ import { pushToBuffer } from "../lib/sparkline-buffer";
 
 /**
  * Hook that subscribes to `system-stats` Tauri events and maintains
- * a sparkline ring buffer for CPU usage history.
+ * sparkline ring buffers for CPU and per-adapter GPU usage history.
  */
 export function useSystemStats() {
   const [stats, setStats] = useState<SystemStats | null>(null);
   const [cpuHistory, setCpuHistory] = useState<number[]>([]);
+  const [gpuHistory, setGpuHistory] = useState<Record<string, number[]>>({});
   const unlistenRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
@@ -17,8 +18,17 @@ export function useSystemStats() {
 
     listen<SystemStats>("system-stats", (event) => {
       if (!mounted) return;
-      setStats(event.payload);
-      setCpuHistory((prev) => pushToBuffer(prev, event.payload.cpu.usage_percent));
+      const payload = event.payload;
+      setStats(payload);
+      setCpuHistory((prev) => pushToBuffer(prev, payload.cpu.usage_percent));
+
+      setGpuHistory((prev) => {
+        const next = { ...prev };
+        for (const gpu of payload.gpu) {
+          next[gpu.id] = pushToBuffer(prev[gpu.id] || [], gpu.usage_percent);
+        }
+        return next;
+      });
     }).then((unlisten) => {
       unlistenRef.current = unlisten;
     });
@@ -29,5 +39,5 @@ export function useSystemStats() {
     };
   }, []);
 
-  return { stats, cpuHistory };
+  return { stats, cpuHistory, gpuHistory };
 }
