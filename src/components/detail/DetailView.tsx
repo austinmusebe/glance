@@ -3,12 +3,15 @@ import { formatDuration } from "../../lib/format";
 import { CpuDetail } from "./CpuDetail";
 import { GpuDetail } from "./GpuDetail";
 import { RamDetail } from "./RamDetail";
+import { NetworkDetail } from "./NetworkDetail";
 
 interface DetailViewProps {
   metric: MetricType;
   stats: SystemStats;
   cpuHistory: number[];
   ramHistory?: number[];
+  netDownHistory?: number[];
+  netUpHistory?: number[];
   gpuHistory?: Record<string, number[]>;
   onBack: () => void;
 }
@@ -26,6 +29,8 @@ export function DetailView({
   stats,
   cpuHistory,
   ramHistory = [],
+  netDownHistory = [],
+  netUpHistory = [],
   gpuHistory = {},
   onBack,
 }: DetailViewProps) {
@@ -74,11 +79,11 @@ export function DetailView({
         )}
 
         {metric === "network" && (
-          <div className="flex flex-col gap-2">
-            <div className="flex items-baseline justify-between">
-              <span className="text-xs text-muted">Network Throughput</span>
-            </div>
-          </div>
+          <NetworkDetail
+            network={stats.network}
+            downHistory={netDownHistory}
+            upHistory={netUpHistory}
+          />
         )}
 
         {metric === "battery" && (

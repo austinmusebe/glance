@@ -5,12 +5,14 @@ import { pushToBuffer } from "../lib/sparkline-buffer";
 
 /**
  * Hook that subscribes to `system-stats` Tauri events and maintains
- * sparkline ring buffers for CPU, RAM, and per-adapter GPU usage history.
+ * sparkline ring buffers for CPU, RAM, Network, and per-adapter GPU usage history.
  */
 export function useSystemStats() {
   const [stats, setStats] = useState<SystemStats | null>(null);
   const [cpuHistory, setCpuHistory] = useState<number[]>([]);
   const [ramHistory, setRamHistory] = useState<number[]>([]);
+  const [netDownHistory, setNetDownHistory] = useState<number[]>([]);
+  const [netUpHistory, setNetUpHistory] = useState<number[]>([]);
   const [gpuHistory, setGpuHistory] = useState<Record<string, number[]>>({});
   const unlistenRef = useRef<(() => void) | null>(null);
 
@@ -23,6 +25,8 @@ export function useSystemStats() {
       setStats(payload);
       setCpuHistory((prev) => pushToBuffer(prev, payload.cpu.usage_percent));
       setRamHistory((prev) => pushToBuffer(prev, payload.ram.usage_percent));
+      setNetDownHistory((prev) => pushToBuffer(prev, payload.network.rx_bytes_per_sec));
+      setNetUpHistory((prev) => pushToBuffer(prev, payload.network.tx_bytes_per_sec));
 
       setGpuHistory((prev) => {
         const next = { ...prev };
@@ -41,5 +45,5 @@ export function useSystemStats() {
     };
   }, []);
 
-  return { stats, cpuHistory, ramHistory, gpuHistory };
+  return { stats, cpuHistory, ramHistory, netDownHistory, netUpHistory, gpuHistory };
 }

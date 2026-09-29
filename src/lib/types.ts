@@ -43,6 +43,9 @@ export interface ProcessItem {
 export interface NetworkStats {
   rx_bytes_per_sec: number;
   tx_bytes_per_sec: number;
+  local_ip?: string | null;
+  wifi_ssid?: string | null;
+  public_ip?: string | null;
 }
 
 export interface UserSettings {

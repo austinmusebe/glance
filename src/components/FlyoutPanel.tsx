@@ -14,7 +14,14 @@ import { SettingsPanel } from "./SettingsPanel";
 import { DetailView } from "./detail/DetailView";
 
 export function FlyoutPanel() {
-  const { stats, cpuHistory, ramHistory, gpuHistory } = useSystemStats();
+  const {
+    stats,
+    cpuHistory,
+    ramHistory,
+    netDownHistory,
+    netUpHistory,
+    gpuHistory,
+  } = useSystemStats();
   const { settings, updateSettings } = useSettings();
   const [showSettings, setShowSettings] = useState(false);
   const [selectedMetric, setSelectedMetric] = useState<MetricType | null>(null);
@@ -83,6 +90,8 @@ export function FlyoutPanel() {
               stats={stats}
               cpuHistory={cpuHistory}
               ramHistory={ramHistory}
+              netDownHistory={netDownHistory}
+              netUpHistory={netUpHistory}
               gpuHistory={gpuHistory}
               onBack={() => setSelectedMetric(null)}
             />

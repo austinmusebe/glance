@@ -122,6 +122,17 @@ impl SystemMonitor {
 
                 let battery_data = crate::battery::get_battery_stats();
 
+                let local_ip = {
+                    use std::net::UdpSocket;
+                    UdpSocket::bind("0.0.0.0:0")
+                        .and_then(|s| s.connect("8.8.8.8:80").map(|_| s))
+                        .and_then(|s| s.local_addr())
+                        .map(|addr| addr.ip().to_string())
+                        .ok()
+                };
+
+                let wifi_ssid = get_wifi_ssid(&networks);
+
                 let stats = SystemStats {
                     timestamp: std::time::SystemTime::now()
                         .duration_since(std::time::UNIX_EPOCH)
@@ -145,8 +156,8 @@ impl SystemMonitor {
                     network: NetworkStats {
                         rx_bytes_per_sec: rx_per_sec,
                         tx_bytes_per_sec: tx_per_sec,
-                        local_ip: None,
-                        wifi_ssid: None,
+                        local_ip,
+                        wifi_ssid,
                         public_ip: None,
                     },
                     battery: battery_data,
@@ -163,4 +174,47 @@ impl SystemMonitor {
             }
         });
     }
+}
+
+fn get_wifi_ssid(networks: &Arc<Mutex<sysinfo::Networks>>) -> Option<String> {
+    #[cfg(target_os = "windows")]
+    {
+        use std::os::windows::process::CommandExt;
+        const CREATE_NO_WINDOW: u32 = 0x08000000;
+
+        let output = std::process::Command::new("netsh")
+            .args(["wlan", "show", "interfaces"])
+            .creation_flags(CREATE_NO_WINDOW)
+            .output();
+
+        if let Ok(out) = output {
+            let text = String::from_utf8_lossy(&out.stdout);
+            for line in text.lines() {
+                let trimmed = line.trim();
+                if trimmed.starts_with("SSID") && !trimmed.starts_with("BSSID") {
+                    if let Some((_, ssid)) = trimmed.split_once(':') {
+                        let name = ssid.trim();
+                        if !name.is_empty() {
+                            return Some(name.to_string());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if let Ok(nets) = networks.lock() {
+        for (name, _) in nets.iter() {
+            if name.contains("Wi-Fi") || name.contains("WiFi") || name.contains("Wireless") {
+                return Some("Wi-Fi".to_string());
+            }
+        }
+        for (name, _) in nets.iter() {
+            if !name.contains("Loopback") && !name.contains("vEthernet") {
+                return Some(name.clone());
+            }
+        }
+    }
+
+    None
 }
