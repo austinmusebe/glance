@@ -126,7 +126,7 @@ export function NetworkDetail({ network, downHistory, upHistory }: NetworkDetail
               className={`px-1.5 py-0.5 text-[9px] rounded font-medium transition-colors ${
                 sortField === "tx"
                   ? "bg-emerald-400/20 text-emerald-400 font-semibold"
-                  : "text-muted hover:text-card-foreground bg-white/5"
+                  : "text-muted hover:text-card-foreground bg-[var(--color-item-bg)]"
               }`}
               title="Sort by Upload"
             >
@@ -136,8 +136,8 @@ export function NetworkDetail({ network, downHistory, upHistory }: NetworkDetail
               onClick={() => handleSort("total")}
               className={`px-1.5 py-0.5 text-[9px] rounded font-medium transition-colors ${
                 sortField === "total"
-                  ? "bg-white/15 text-card-foreground font-semibold"
-                  : "text-muted hover:text-card-foreground bg-white/5"
+                  ? "bg-[var(--color-item-active)] text-card-foreground font-semibold"
+                  : "text-muted hover:text-card-foreground bg-[var(--color-item-bg)]"
               }`}
               title="Sort by Total"
             >
@@ -155,7 +155,7 @@ export function NetworkDetail({ network, downHistory, upHistory }: NetworkDetail
             sortedApps.slice(0, 15).map((app, idx) => (
               <div
                 key={`${app.name}-${idx}`}
-                className="flex items-center justify-between py-1 px-1.5 rounded hover:bg-white/5 transition-colors text-xs"
+                className="flex items-center justify-between py-1 px-1.5 rounded hover:bg-[var(--color-item-hover)] transition-colors text-xs"
               >
                 <div className="flex items-center gap-2 min-w-0">
                   <span className="text-[10px] tabular-nums text-muted w-3 text-right">

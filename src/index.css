@@ -57,38 +57,48 @@ body,
 }
 
 /* Custom theme tokens for dark (default) */
-:root {
-  --color-card: rgba(30, 30, 30, 0.65);
-  --color-card-hover: rgba(40, 40, 40, 0.75);
+:root,
+:root.dark {
+  --color-bg: rgba(22, 22, 24, 0.75);
+  --color-card: rgba(32, 32, 36, 0.7);
+  --color-card-hover: rgba(44, 44, 50, 0.82);
   --color-card-foreground: rgba(255, 255, 255, 0.95);
   --color-muted: rgba(255, 255, 255, 0.55);
-  --color-accent: rgb(96, 165, 250);
-  --color-accent-dim: rgba(96, 165, 250, 0.2);
   --color-border: rgba(255, 255, 255, 0.08);
-  --color-border-hover: rgba(255, 255, 255, 0.15);
+  --color-border-hover: rgba(255, 255, 255, 0.18);
+  --color-item-bg: rgba(255, 255, 255, 0.05);
+  --color-item-hover: rgba(255, 255, 255, 0.1);
+  --color-accent: rgb(59, 130, 246);
+  --color-accent-dim: rgba(59, 130, 246, 0.2);
   --radius-card: 10px;
 }
 
 /* Light mode tokens */
 :root.light {
-  --color-card: rgba(255, 255, 255, 0.68);
-  --color-card-hover: rgba(255, 255, 255, 0.82);
-  --color-card-foreground: rgba(20, 20, 20, 0.95);
-  --color-muted: rgba(0, 0, 0, 0.55);
+  --color-bg: rgba(248, 249, 250, 0.88);
+  --color-card: rgba(255, 255, 255, 0.85);
+  --color-card-hover: rgba(255, 255, 255, 0.96);
+  --color-card-foreground: rgba(17, 24, 39, 0.95);
+  --color-muted: rgba(107, 114, 128, 0.9);
+  --color-border: rgba(0, 0, 0, 0.08);
+  --color-border-hover: rgba(0, 0, 0, 0.18);
+  --color-item-bg: rgba(0, 0, 0, 0.04);
+  --color-item-hover: rgba(0, 0, 0, 0.08);
   --color-accent: rgb(37, 99, 235);
   --color-accent-dim: rgba(37, 99, 235, 0.15);
-  --color-border: rgba(0, 0, 0, 0.08);
-  --color-border-hover: rgba(0, 0, 0, 0.16);
 }
 
 @theme {
+  --color-bg: var(--color-bg);
   --color-card: var(--color-card);
   --color-card-hover: var(--color-card-hover);
   --color-card-foreground: var(--color-card-foreground);
   --color-muted: var(--color-muted);
-  --color-accent: var(--color-accent);
-  --color-accent-dim: var(--color-accent-dim);
   --color-border: var(--color-border);
   --color-border-hover: var(--color-border-hover);
+  --color-item-bg: var(--color-item-bg);
+  --color-item-hover: var(--color-item-hover);
+  --color-accent: var(--color-accent);
+  --color-accent-dim: var(--color-accent-dim);
   --radius-card: var(--radius-card);
 }

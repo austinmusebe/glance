@@ -21,7 +21,7 @@ export function CpuDetail({ cpu, history }: CpuDetailProps) {
           <div className="flex items-center gap-2">
             <span className="text-xs text-muted">Overall Load</span>
             {cores.length > 0 && (
-              <span className="text-[10px] text-muted font-medium px-1.5 py-0.5 rounded bg-white/5 border border-border">
+              <span className="text-[10px] text-muted font-medium px-1.5 py-0.5 rounded bg-[var(--color-item-bg)] border border-border">
                 {cores.length} Cores
               </span>
             )}
@@ -74,7 +74,7 @@ export function CpuDetail({ cpu, history }: CpuDetailProps) {
             {topProcesses.map((proc, idx) => (
               <div
                 key={`${proc.pid}-${idx}`}
-                className="flex items-center justify-between py-1 px-1.5 rounded hover:bg-white/5 transition-colors text-xs"
+                className="flex items-center justify-between py-1 px-1.5 rounded hover:bg-[var(--color-item-hover)] transition-colors text-xs"
               >
                 <div className="flex items-center gap-2 min-w-0">
                   <span className="text-[10px] tabular-nums text-muted w-3 text-right">

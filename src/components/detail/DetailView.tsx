@@ -42,7 +42,7 @@ export function DetailView({
       <div className="flex items-center justify-between pb-2 border-b border-border">
         <button
           onClick={onBack}
-          className="flex items-center gap-1 text-xs text-muted hover:text-card-foreground transition-colors py-1 px-1.5 -ml-1 rounded hover:bg-white/5 active:scale-95 cursor-pointer font-medium"
+          className="flex items-center gap-1 text-xs text-muted hover:text-card-foreground transition-colors py-1 px-1.5 -ml-1 rounded hover:bg-[var(--color-item-hover)] active:scale-95 cursor-pointer font-medium"
           aria-label="Back to overview"
         >
           <svg

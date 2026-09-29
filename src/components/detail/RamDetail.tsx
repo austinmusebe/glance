@@ -49,7 +49,7 @@ export function RamDetail({ ram, history }: RamDetailProps) {
             {topProcesses.map((proc, idx) => (
               <div
                 key={`${proc.pid}-${idx}`}
-                className="flex items-center justify-between py-1 px-1.5 rounded hover:bg-white/5 transition-colors text-xs"
+                className="flex items-center justify-between py-1 px-1.5 rounded hover:bg-[var(--color-item-hover)] transition-colors text-xs"
               >
                 <div className="flex items-center gap-2 min-w-0">
                   <span className="text-[10px] tabular-nums text-muted w-3 text-right">

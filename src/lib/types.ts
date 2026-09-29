@@ -65,6 +65,7 @@ export interface UserSettings {
   theme: "light" | "dark" | "system";
   launch_on_startup: boolean;
   layout: "grid" | "stacked";
+  accent_color?: string;
 }
 
 export const DEFAULT_SETTINGS: UserSettings = {
@@ -72,4 +73,5 @@ export const DEFAULT_SETTINGS: UserSettings = {
   theme: "system",
   launch_on_startup: false,
   layout: "grid",
+  accent_color: "#3b82f6",
 };

@@ -149,7 +149,7 @@ export function FlyoutPanel() {
               </span>
               <button
                 onClick={() => setShowSettings(true)}
-                className="text-muted hover:text-card-foreground p-1 rounded transition-colors duration-150 hover:bg-white/5 active:scale-95 cursor-pointer"
+                className="text-muted hover:text-card-foreground p-1 rounded transition-colors duration-150 hover:bg-[var(--color-item-hover)] active:scale-95 cursor-pointer"
                 title="Settings"
                 aria-label="Open settings"
               >
