@@ -1,4 +1,5 @@
 import type { MetricType, SystemStats } from "../../lib/types";
+import { formatDuration } from "../../lib/format";
 import { Sparkline } from "../Sparkline";
 
 interface DetailViewProps {
@@ -98,10 +99,66 @@ export function DetailView({ metric, stats, cpuHistory, onBack }: DetailViewProp
         )}
 
         {metric === "battery" && (
-          <div className="flex flex-col gap-2">
-            <div className="flex items-baseline justify-between">
-              <span className="text-xs text-muted">Battery Status</span>
-            </div>
+          <div className="flex flex-col gap-3">
+            {stats.battery ? (
+              <>
+                <div className="flex flex-col gap-2 rounded-[var(--radius-card)] bg-card p-3 border border-border">
+                  <div className="flex items-baseline justify-between">
+                    <span className="text-xs text-muted">Charge Level</span>
+                    <span className="text-2xl font-bold tabular-nums text-card-foreground">
+                      {stats.battery.percent}%
+                    </span>
+                  </div>
+                  <div className="w-full bg-[var(--color-border)] h-2 rounded-full overflow-hidden">
+                    <div
+                      className={`h-full transition-all duration-300 ${
+                        stats.battery.is_charging
+                          ? "bg-[var(--color-accent)]"
+                          : stats.battery.percent <= 20
+                          ? "bg-red-500"
+                          : "bg-[var(--color-accent)]"
+                      }`}
+                      style={{ width: `${stats.battery.percent}%` }}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-2 rounded-[var(--radius-card)] bg-card p-3 border border-border text-xs">
+                  <div className="flex items-center justify-between py-1 border-b border-border">
+                    <span className="text-muted">Power Source</span>
+                    <span className="font-medium text-card-foreground">
+                      {stats.battery.is_plugged_in ? "Power Adapter (AC)" : "Battery"}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between py-1 border-b border-border">
+                    <span className="text-muted">State</span>
+                    <span className="font-medium text-card-foreground">
+                      {stats.battery.is_charging
+                        ? "Charging"
+                        : stats.battery.is_plugged_in
+                        ? "Plugged In"
+                        : "Discharging"}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between py-1">
+                    <span className="text-muted">Time Remaining</span>
+                    <span className="font-medium text-card-foreground tabular-nums">
+                      {stats.battery.time_remaining_secs && stats.battery.time_remaining_secs > 0
+                        ? formatDuration(stats.battery.time_remaining_secs)
+                        : stats.battery.is_charging
+                        ? "Charging"
+                        : stats.battery.is_plugged_in
+                        ? "Full"
+                        : "Calculating..."}
+                    </span>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="p-4 text-center text-xs text-muted">
+                No system battery detected.
+              </div>
+            )}
           </div>
         )}
       </div>

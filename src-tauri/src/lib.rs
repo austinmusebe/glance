@@ -1,3 +1,4 @@
+mod battery;
 mod gpu_monitor;
 mod models;
 mod settings;

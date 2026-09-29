@@ -98,6 +98,13 @@ impl SystemMonitor {
                     }
                 };
 
+                let battery_data = crate::battery::get_battery_stats();
+
+                let core_percentages: Vec<f32> = {
+                    let sys = system.lock().unwrap();
+                    sys.cpus().iter().map(|c| c.cpu_usage()).collect()
+                };
+
                 let stats = SystemStats {
                     timestamp: std::time::SystemTime::now()
                         .duration_since(std::time::UNIX_EPOCH)
@@ -105,6 +112,7 @@ impl SystemMonitor {
                         .as_millis() as u64,
                     cpu: CpuStats {
                         usage_percent: cpu_usage,
+                        core_percentages,
                     },
                     gpu: gpu_data,
                     ram: RamStats {
@@ -115,11 +123,16 @@ impl SystemMonitor {
                         } else {
                             0.0
                         },
+                        top_processes: vec![],
                     },
                     network: NetworkStats {
                         rx_bytes_per_sec: rx_per_sec,
                         tx_bytes_per_sec: tx_per_sec,
+                        local_ip: None,
+                        wifi_ssid: None,
+                        public_ip: None,
                     },
+                    battery: battery_data,
                 };
 
                 let _ = app_handle.emit("system-stats", &stats);

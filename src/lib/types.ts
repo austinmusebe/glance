@@ -6,6 +6,14 @@ export interface SystemStats {
   gpu: GpuAdapter[];
   ram: RamStats;
   network: NetworkStats;
+  battery?: BatteryStats | null;
+}
+
+export interface BatteryStats {
+  percent: number;
+  is_charging: boolean;
+  is_plugged_in: boolean;
+  time_remaining_secs?: number | null;
 }
 
 export interface CpuStats {

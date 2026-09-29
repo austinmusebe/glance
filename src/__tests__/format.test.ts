@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { formatThroughput, formatBytes, formatPercent } from "../lib/format";
+import { formatThroughput, formatBytes, formatPercent, formatDuration } from "../lib/format";
 
 describe("formatThroughput", () => {
   it("formats zero", () => {
@@ -59,5 +59,19 @@ describe("formatPercent", () => {
 
   it("handles 100", () => {
     expect(formatPercent(100)).toBe("100%");
+  });
+});
+
+describe("formatDuration", () => {
+  it("formats hours and minutes", () => {
+    expect(formatDuration(8100)).toBe("2h 15m");
+  });
+
+  it("formats minutes only", () => {
+    expect(formatDuration(1800)).toBe("30m");
+  });
+
+  it("formats zero", () => {
+    expect(formatDuration(0)).toBe("0m");
   });
 });

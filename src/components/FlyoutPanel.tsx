@@ -9,6 +9,7 @@ import { CpuCard } from "./cards/CpuCard";
 import { GpuCard } from "./cards/GpuCard";
 import { RamCard } from "./cards/RamCard";
 import { NetworkCard } from "./cards/NetworkCard";
+import { BatteryCard } from "./cards/BatteryCard";
 import { SettingsPanel } from "./SettingsPanel";
 import { DetailView } from "./detail/DetailView";
 
@@ -18,15 +19,16 @@ export function FlyoutPanel() {
   const [showSettings, setShowSettings] = useState(false);
   const [selectedMetric, setSelectedMetric] = useState<MetricType | null>(null);
 
-  // Dynamically adjust window size and position based on layout choice
+  // Dynamically adjust window size and position based on layout choice and battery presence
   useEffect(() => {
     async function updateLayout() {
       try {
         const appWindow = getCurrentWindow();
+        const hasBattery = Boolean(stats?.battery);
         if (settings.layout === "stacked") {
-          await appWindow.setSize(new LogicalSize(320, 510));
+          await appWindow.setSize(new LogicalSize(320, hasBattery ? 590 : 510));
         } else {
-          await appWindow.setSize(new LogicalSize(380, 430));
+          await appWindow.setSize(new LogicalSize(380, hasBattery ? 510 : 430));
         }
         await moveWindowConstrained(Position.TrayCenter);
       } catch {
@@ -34,7 +36,7 @@ export function FlyoutPanel() {
       }
     }
     updateLayout();
-  }, [settings.layout]);
+  }, [settings.layout, Boolean(stats?.battery)]);
 
   if (!stats && !showSettings) {
     return (
@@ -119,6 +121,12 @@ export function FlyoutPanel() {
                     network={stats.network}
                     onClick={() => setSelectedMetric("network")}
                   />
+                  {stats.battery && (
+                    <BatteryCard
+                      battery={stats.battery}
+                      onClick={() => setSelectedMetric("battery")}
+                    />
+                  )}
                 </>
               )}
             </div>
