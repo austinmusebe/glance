@@ -39,7 +39,14 @@ pub fn create_tray<R: Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<()> {
                     if window.is_visible().unwrap_or(false) {
                         let _ = window.hide();
                     } else {
-                        let _ = window.move_window(Position::TrayBottomCenter);
+                        let _ = window.move_window_constrained(Position::TrayCenter);
+                        if let Ok(mut pos) = window.outer_position() {
+                            let scale_factor = window.scale_factor().unwrap_or(1.0);
+                            let margin = (10.0 * scale_factor) as i32;
+                            pos.y -= margin;
+                            pos.x -= margin;
+                            let _ = window.set_position(pos);
+                        }
                         let _ = window.show();
                         let _ = window.set_focus();
                     }

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { getCurrentWindow, LogicalSize } from "@tauri-apps/api/window";
+import { moveWindowConstrained, Position } from "@tauri-apps/plugin-positioner";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSystemStats } from "../hooks/useSystemStats";
 import { useSettings } from "../hooks/useSettings";
@@ -14,18 +15,22 @@ export function FlyoutPanel() {
   const { settings, updateSettings } = useSettings();
   const [showSettings, setShowSettings] = useState(false);
 
-  // Dynamically adjust window size based on layout choice
+  // Dynamically adjust window size and position based on layout choice
   useEffect(() => {
-    try {
-      const appWindow = getCurrentWindow();
-      if (settings.layout === "stacked") {
-        appWindow.setSize(new LogicalSize(320, 510));
-      } else {
-        appWindow.setSize(new LogicalSize(380, 430));
+    async function updateLayout() {
+      try {
+        const appWindow = getCurrentWindow();
+        if (settings.layout === "stacked") {
+          await appWindow.setSize(new LogicalSize(320, 510));
+        } else {
+          await appWindow.setSize(new LogicalSize(380, 430));
+        }
+        await moveWindowConstrained(Position.TrayCenter);
+      } catch {
+        // In browser testing or mock mode, ignore window resize failure
       }
-    } catch {
-      // In browser testing or mock mode, ignore window resize failure
     }
+    updateLayout();
   }, [settings.layout]);
 
   if (!stats && !showSettings) {
