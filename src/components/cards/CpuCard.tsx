@@ -6,11 +6,19 @@ interface CpuCardProps {
   cpu: CpuStats;
   history: number[];
   isStacked?: boolean;
+  onClick?: () => void;
 }
 
-export function CpuCard({ cpu, history, isStacked = false }: CpuCardProps) {
+export function CpuCard({ cpu, history, isStacked = false, onClick }: CpuCardProps) {
   return (
-    <div className="flex flex-col gap-1.5 rounded-[var(--radius-card)] bg-card hover:bg-[var(--color-card-hover)] p-3 border border-border transition-colors duration-150 shadow-sm">
+    <div
+      onClick={onClick}
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      className={`flex flex-col gap-1.5 rounded-[var(--radius-card)] bg-card hover:bg-[var(--color-card-hover)] p-3 border border-border transition-all duration-150 shadow-sm ${
+        onClick ? "cursor-pointer active:scale-[0.98] select-none hover:border-[var(--color-border-hover)]" : ""
+      }`}
+    >
       <div className="flex items-baseline justify-between">
         <span className="text-[11px] font-semibold tracking-wider uppercase text-muted">
           CPU

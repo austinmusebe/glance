@@ -1,3 +1,5 @@
+export type MetricType = "cpu" | "gpu" | "ram" | "network" | "battery";
+
 export interface SystemStats {
   timestamp: number;
   cpu: CpuStats;

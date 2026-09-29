@@ -4,11 +4,19 @@ import { ProgressBar } from "../ProgressBar";
 
 interface RamCardProps {
   ram: RamStats;
+  onClick?: () => void;
 }
 
-export function RamCard({ ram }: RamCardProps) {
+export function RamCard({ ram, onClick }: RamCardProps) {
   return (
-    <div className="flex flex-col gap-2 rounded-[var(--radius-card)] bg-card hover:bg-[var(--color-card-hover)] p-3 border border-border transition-colors duration-150 shadow-sm justify-between">
+    <div
+      onClick={onClick}
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      className={`flex flex-col gap-2 rounded-[var(--radius-card)] bg-card hover:bg-[var(--color-card-hover)] p-3 border border-border transition-all duration-150 shadow-sm justify-between ${
+        onClick ? "cursor-pointer active:scale-[0.98] select-none hover:border-[var(--color-border-hover)]" : ""
+      }`}
+    >
       <span className="text-[11px] font-semibold tracking-wider uppercase text-muted">
         RAM
       </span>

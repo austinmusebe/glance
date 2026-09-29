@@ -4,16 +4,19 @@ import { moveWindowConstrained, Position } from "@tauri-apps/plugin-positioner";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSystemStats } from "../hooks/useSystemStats";
 import { useSettings } from "../hooks/useSettings";
+import type { MetricType } from "../lib/types";
 import { CpuCard } from "./cards/CpuCard";
 import { GpuCard } from "./cards/GpuCard";
 import { RamCard } from "./cards/RamCard";
 import { NetworkCard } from "./cards/NetworkCard";
 import { SettingsPanel } from "./SettingsPanel";
+import { DetailView } from "./detail/DetailView";
 
 export function FlyoutPanel() {
   const { stats, cpuHistory } = useSystemStats();
   const { settings, updateSettings } = useSettings();
   const [showSettings, setShowSettings] = useState(false);
+  const [selectedMetric, setSelectedMetric] = useState<MetricType | null>(null);
 
   // Dynamically adjust window size and position based on layout choice
   useEffect(() => {
@@ -64,12 +67,28 @@ export function FlyoutPanel() {
               updateSettings={updateSettings}
             />
           </motion.div>
+        ) : selectedMetric && stats ? (
+          <motion.div
+            key={`detail-${selectedMetric}`}
+            initial={{ opacity: 0, x: 12 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -12 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+            className="h-full flex flex-col"
+          >
+            <DetailView
+              metric={selectedMetric}
+              stats={stats}
+              cpuHistory={cpuHistory}
+              onBack={() => setSelectedMetric(null)}
+            />
+          </motion.div>
         ) : (
           <motion.div
-            key="metrics"
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.98 }}
+            key="overview"
+            initial={{ opacity: 0, x: -12 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 12 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
             className="flex flex-col h-full justify-between"
           >
@@ -86,10 +105,20 @@ export function FlyoutPanel() {
                     cpu={stats.cpu}
                     history={cpuHistory}
                     isStacked={isStacked}
+                    onClick={() => setSelectedMetric("cpu")}
                   />
-                  <GpuCard gpus={stats.gpu} />
-                  <RamCard ram={stats.ram} />
-                  <NetworkCard network={stats.network} />
+                  <GpuCard
+                    gpus={stats.gpu}
+                    onClick={() => setSelectedMetric("gpu")}
+                  />
+                  <RamCard
+                    ram={stats.ram}
+                    onClick={() => setSelectedMetric("ram")}
+                  />
+                  <NetworkCard
+                    network={stats.network}
+                    onClick={() => setSelectedMetric("network")}
+                  />
                 </>
               )}
             </div>
